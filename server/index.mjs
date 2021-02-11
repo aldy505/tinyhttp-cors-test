@@ -1,38 +1,19 @@
 import { App } from '@tinyhttp/app'
-import { cors } from './../cors_middleware/dist/index.cjs'
+import { cors } from './../cors_middleware/dist/index.js'
 
 const app = new App()
 
-const corsRegex = {origin: /(?:http:\/\/)?localhost:3000/}
-const corsNormal = {origin: 'http://localhost:3000'}
-const corsArray = {origin: ['http://localhost:3000', 'http://localhost:5000']}
+// const corsRegex = {origin: /(?:http:\/\/)?localhost:3000/}
+// const corsNormal = {origin: 'http://localhost:3000'}
+// const corsArray = {origin: ['http://localhost:3000', 'http://localhost:5000']}
 app
-    .get('/', cors(corsNormal), (req, res) => {
-        res.status(200).json(
-            {
-                headers: req.headers,
-                origin: req.headers.origin,
-                date: new Date()
-            }
-        )
+    .use(cors())
+    .options('/', cors())
+    .post('/', async (_, res) => {
+        res.json({message: "Hello there from POST Request"})
     })
-    .get('/regex', cors(corsRegex), (req, res) => {
-        res.status(200).json(
-            {
-                headers: req.headers,
-                origin: req.headers.origin,
-                date: new Date()
-            }
-        )
-    })
-    .get('/array', cors(corsArray), (req, res) => {
-        res.status(200).json(
-            {
-                headers: req.headers,
-                origin: req.headers.origin,
-                date: new Date()
-            }
-        )
+    .get('/', async (_, res) => {
+        res.json({message: "Hello there from GET Request"})
     })
     .listen(3100, () => {
         console.log("Server started on http://localhost:3100")

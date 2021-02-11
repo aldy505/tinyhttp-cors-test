@@ -4,7 +4,7 @@ import { vary } from 'es-vary';
  * CORS Middleware
  */
 const cors = (opts = {}) => {
-    const { origin = '*', methods = ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'], allowedHeaders, exposedHeaders, credentials, maxAge, optionsSuccessStatus = 204, preflightContinue = true } = opts;
+    const { origin = '*', methods = ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'], allowedHeaders, exposedHeaders, credentials, maxAge, optionsSuccessStatus = 204, preflightContinue = false } = opts;
     return (req, res, next) => {
         // Checking the type of the origin property
         if (typeof origin === 'boolean' && origin === true) {
@@ -43,12 +43,19 @@ const cors = (opts = {}) => {
         // Setting the Access-Control-Max-Age header
         if (maxAge)
             res.setHeader('Access-Control-Max-Age', maxAge);
-        if (preflightContinue) {
-            next === null || next === void 0 ? void 0 : next();
+        const method = req.method && req.method.toUpperCase && req.method.toUpperCase();
+        if (method === 'OPTIONS') {
+            if (preflightContinue) {
+                next === null || next === void 0 ? void 0 : next();
+            }
+            else {
+                res.statusCode = optionsSuccessStatus;
+                res.setHeader('Content-Length', '0');
+                res.end();
+            }
         }
         else {
-            res.statusCode = optionsSuccessStatus;
-            res.end();
+            next === null || next === void 0 ? void 0 : next();
         }
     };
 };

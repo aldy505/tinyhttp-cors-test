@@ -1,9 +1,9 @@
 <template>
   <div class="container">
       <div class="grid">
-            <button @click="callNormal">Normal CORS endpoint</button>
-            <button @click="callArray">Array CORS endpoint</button>
-            <button @click="callRegex">Regex CORS endpoint</button>
+            <button @click="callGet">GET Request</button>
+            <button @click="callPost">POST Request</button>
+            <button @click="callOptions">OPTIONS Request</button>
             <button @click="data = []">Clear</button>
       </div>
       <div class="code">
@@ -23,7 +23,7 @@ export default {
         }
     },
     methods: {
-        async callNormal() {
+        async callGet() {
             try {
                 const res = await axios.get('http://localhost:3100')
                 this.data.push(res.data)
@@ -31,17 +31,17 @@ export default {
                 console.error(error)
             }
         },
-        async callArray() {
+        async callPost() {
             try {
-                const res = await axios.get('http://localhost:3100/array')
+                const res = await axios.post('http://localhost:3100')
                 this.data.push(res.data)
             } catch (error) {
                 console.error(error)
             }
         },
-        async callRegex() {
+        async callOptions() {
             try {
-                const res = await axios.get('http://localhost:3100/regex')
+                const res = await axios.options('http://localhost:3100')
                 this.data.push(res.data)
             } catch (error) {
                 console.error(error)
